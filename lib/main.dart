@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:singleton/Cubit/cubit.dart';
 import 'package:singleton/Provider/provider.dart';
 
+import 'Provider/service/usuario_service.dart';
 import 'Singleton/SingletonPage.dart';
 
-void main() => runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+void main() => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_)=>UsuarioService(),)
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: MyApp(),
+        ),
       ),
-      home: MyApp(),
-    ));
+    );
 
 class MyApp extends StatefulWidget {
   @override
@@ -52,7 +61,8 @@ class _MyAppState extends State<MyApp> {
         itemBuilder: (_, i) => InkWell(
           onTap: () => onPages(pages[i].actionTap),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal:15.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
             child: Material(
               elevation: 5.0,
               child: Container(

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:singleton/Models/usuario.dart';
-import 'package:singleton/Singleton/service/usuario_services.dart';
+import 'package:singleton/Provider/service/usuario_service.dart';
 
 class Page2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final usuario = Provider.of<UsuarioService>(context);
     return Scaffold(
         appBar: AppBar(
-          title: StreamBuilder(
-              stream: usuarioService.usuarioStream,
-              builder: (context, AsyncSnapshot<Usuario> snapshot) {
-                return Text(
-                    snapshot.hasData ? 'Nombre: ${snapshot.data.nombre}' : 'Pagina2');
-              }),
+          title: Text(usuario.existeUsuario
+              ? 'Nombre: ${usuario.usuario.nombre}'
+              : 'Pagina2'),
           centerTitle: true,
         ),
         body: Center(
@@ -21,10 +20,15 @@ class Page2Page extends StatelessWidget {
             children: [
               MaterialButton(
                 onPressed: () {
-                  final nuevoUsuario =
-                      new Usuario(nombre: 'Alejandro', edad: 26);
-
-                  usuarioService.cargarUsuario(nuevoUsuario);
+                  Usuario user = new Usuario(
+                      nombre: 'Alejandro',
+                      edad: 26,
+                      profesiones: [
+                        'Developers flutter',
+                        'java',
+                        'javascript'
+                      ]);
+                  usuario.cargarUsuario(user);
                 },
                 child: Text(
                   'Establecer Usuario',
@@ -34,7 +38,7 @@ class Page2Page extends StatelessWidget {
               ),
               MaterialButton(
                 onPressed: () {
-                  usuarioService.cambiarEdad(30);
+                  usuario.cambiarEdad(35);
                 },
                 child: Text(
                   'Cambiar Edad',
@@ -43,7 +47,7 @@ class Page2Page extends StatelessWidget {
                 textColor: Colors.white,
               ),
               MaterialButton(
-                onPressed: () {},
+                onPressed: () =>usuario.agregarProfesiones(),
                 child: Text(
                   'Añadir Profesión',
                 ),
